@@ -1,0 +1,8 @@
+F1 Strategy Engine Validation Results
+========================================
+Races tested: 14
+Successful validations: 12
+Average time prediction error: 6.8%
+Pit strategy match rate: 42%
+
+Note: Weather data fetched from OpenWeather API
