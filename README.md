@@ -7,7 +7,9 @@ An AI powered platform that suggests the optimal pit stop strategy based on trai
 The model has been trained on race results and strategies of years - 2018, 2020, 2021, 2022, 2023 and 2024 using linear regression. 
 Linear regression was implemented using following formula:-
 lap_time=slope*number_of_laps+base_time
-The y-axis represents the lap time and the x-axis represents lap in stint. The slop represents tire degradation for a particluar set of tires.
+
+The y-axis represents the lap time and the x-axis represents lap in stint. 
+The slop represents tire degradation for a particluar set of tires.
 
 Our system fetches current weather from the track (eg - Saudi Arabia) through OpenWeather API and based on above calculations suggests the best strategies and win probability.
 
@@ -24,4 +26,5 @@ To provide a verification for predicted strategy, we have implemented a LLM feed
 <img src="screenshots/Screenshot 2025-11-18 150220.png">
 
 <img src="screenshots/Screenshot 2025-11-18 150206.png">
+
 
