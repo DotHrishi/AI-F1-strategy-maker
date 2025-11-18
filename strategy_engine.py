@@ -211,42 +211,37 @@ def optimize_strategy(track: str, team: str = 'Other', weather: Dict = None) -> 
     
     return best_strat, best_time, pit_laps, best_analytics
 
-# Optional: LLM explanation (needs OPENAI_API_KEY)
+# Optional: LLM explanation (Groq)
 try:
     from groq import Groq
-    from dotenv import load_dotenv
-    import os
-
-    load_dotenv()
     client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
     def explain_strategy(strategy, track, weather):
-        from groq import Groq
-        import os
-        from dotenv import load_dotenv
+        try:
+            prompt = f"""
+            You are an F1 strategy engineer. Analyze this strategy:
+            Track: {track}
+            Weather: {weather}
+            Strategy: {strategy}
+            Explain briefly how this helps optimize tire degradation, pit timing, and performance.
+            """
 
-        load_dotenv()
-        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+            response = client.chat.completions.create(
+                model="llama-3.1-8b-instant",
+                messages=[{"role": "user", "content": prompt}],
+                max_tokens=300,
+            )
 
-        prompt = f"""
-        You are an F1 strategy engineer. Analyze this strategy:
-        Track: {track}
-        Weather: {weather}
-        Strategy: {strategy}
-        Explain briefly how this helps optimize tire degradation, pit timing, and performance.
-        """
+            return response.choices[0].message.content
 
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=300,
-        )
-
-        return response.choices[0].message.content
+        except Exception as e:
+            return f"LLM Error: {str(e)}. Check your GROQ_API_KEY."
 
 except ImportError:
     def explain_strategy(*args):
-        return "OpenAI not available. Install openai package: pip install openai"
+        return "Groq SDK not installed. Run: pip install groq"
+
 except Exception as e:
-    def explain_strategy(*args):
-        return f"OpenAI error: {e}. Check your API key and network connection."
+    # catch import-time errors (invalid key, API issues)
+    def explain_strategy(*args, err=e):
+        return f"Groq initialization error: {str(err)}"
